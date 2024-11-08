@@ -144,6 +144,11 @@ def buscar_vuelo10(message):
     )
     bot.reply_to(message, respuesta)
 
+@bot.message_handler(commands=['ChingatuMadre'])
+def buscar_vuelo6(message):
+    respuesta = ("Chinga tu madre tú, todo por eso esta pendejada de Base de datos ni va aquedar, pinche puto. Orale a chingar a su madre a otro lado.")
+    bot.reply_to(message, respuesta)
+
 # Echo para otros mensajes
 @bot.message_handler(func=lambda msg: True)
 def echo_all(message):
