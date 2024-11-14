@@ -9,145 +9,52 @@ load_dotenv()
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
+# Base de datos de vuelos simulados
+vuelos = [
+    {"origen": "Ciudad de México", "destino": "Cancún", "fecha": "2024-11-20", "precio": "$1500"},
+    {"origen": "Ciudad de México", "destino": "Nueva York", "fecha": "2024-11-21", "precio": "$1600"},
+    {"origen": "Ciudad de México", "destino": "Toronto", "fecha": "2024-11-22", "precio": "$1400"},
+    {"origen": "Guadalajara", "destino": "Monterrey", "fecha": "2024-11-20", "precio": "$1200"},
+    {"origen": "Guadalajara", "destino": "Tijuana", "fecha": "2024-11-23", "precio": "$1700"},
+    {"origen": "Cancún", "destino": "Ciudad de México", "fecha": "2024-11-24", "precio": "$1800"},
+    {"origen": "Monterrey", "destino": "Guadalajara", "fecha": "2024-11-25", "precio": "$1300"},
+    {"origen": "Ciudad de México", "destino": "Los Cabos", "fecha": "2024-11-22", "precio": "$2000"},
+    {"origen": "Estado de México", "destino": "Veracruz", "fecha": "2024-11-28", "precio": "$2000"},
+    {"origen": "Guadalajara", "destino": "Ciudad de México", "fecha": "2024-11-22", "precio": "$3000"}
+]
+
 # Maneja el comando /start y /hello
 @bot.message_handler(commands=['start', 'hello'])
 def send_welcome(message):
-    bot.reply_to(message, "¡Hola! Soy el bot de Aerolínea Benjíro. Usa los comandos para encontrar vuelos simulados.")
+    bot.reply_to(message, "¡Hola! Soy el bot de Aerolínea Benjíro. Usa /buscar [destino] para encontrar vuelos simulados.")
 
-# Comando simulado de búsqueda de vuelos
-@bot.message_handler(commands=['buscar_simulado'])
-def buscar_vuelos_simulado(message):
-    # Simulación de respuesta de búsqueda
-    origen = "CDMX"
-    destino = "Cancún"
-    fecha = "2024-12-15"
-    precio = "$3000 MXN"
+# Comando para buscar vuelos por destino
+@bot.message_handler(commands=['buscar'])
+def buscar_vuelos(message):
+    try:
+        # Obtener el destino buscado
+        destino_buscado = message.text.split(" ", 1)[1].strip()
+        vuelos_encontrados = [
+            vuelo for vuelo in vuelos if vuelo["destino"].lower() == destino_buscado.lower()
+        ]
 
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: {origen}\n"
-        f"Destino: {destino}\n"
-        f"Fecha: {fecha}\n"
-        f"Precio: {precio}"
-    )
+        # Generar la respuesta
+        if vuelos_encontrados:
+            respuesta = "Vuelos encontrados:\n\n"
+            for vuelo in vuelos_encontrados:
+                respuesta += (
+                    f"Origen: {vuelo['origen']}\n"
+                    f"Destino: {vuelo['destino']}\n"
+                    f"Fecha: {vuelo['fecha']}\n"
+                    f"Precio: {vuelo['precio']}\n\n"
+                )
+        else:
+            respuesta = f"No se encontraron vuelos para el destino: {destino_buscado}"
 
-    bot.reply_to(message, respuesta)
+        bot.reply_to(message, respuesta)
 
-# Comandos simulados adicionales
-@bot.message_handler(commands=['buscar_vuelo1'])
-def buscar_vuelo1(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: CDMX\n"
-        f"Destino: Guadalajara\n"
-        f"Fecha: 2024-12-20\n"
-        f"Precio: $2500 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo2'])
-def buscar_vuelo2(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: Monterrey\n"
-        f"Destino: CDMX\n"
-        f"Fecha: 2024-12-25\n"
-        f"Precio: $2800 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo3'])
-def buscar_vuelo3(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: CDMX\n"
-        f"Destino: Mérida\n"
-        f"Fecha: 2025-01-05\n"
-        f"Precio: $3500 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo4'])
-def buscar_vuelo4(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: Tijuana\n"
-        f"Destino: CDMX\n"
-        f"Fecha: 2024-11-30\n"
-        f"Precio: $2700 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo5'])
-def buscar_vuelo5(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: CDMX\n"
-        f"Destino: Los Cabos\n"
-        f"Fecha: 2024-12-10\n"
-        f"Precio: $3200 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo6'])
-def buscar_vuelo6(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: Cancún\n"
-        f"Destino: CDMX\n"
-        f"Fecha: 2024-12-15\n"
-        f"Precio: $3000 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo7'])
-def buscar_vuelo7(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: CDMX\n"
-        f"Destino: Oaxaca\n"
-        f"Fecha: 2024-12-05\n"
-        f"Precio: $2600 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo8'])
-def buscar_vuelo8(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: Puebla\n"
-        f"Destino: CDMX\n"
-        f"Fecha: 2024-12-08\n"
-        f"Precio: $2200 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo9'])
-def buscar_vuelo9(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: CDMX\n"
-        f"Destino: Villahermosa\n"
-        f"Fecha: 2024-12-18\n"
-        f"Precio: $3100 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['buscar_vuelo10'])
-def buscar_vuelo10(message):
-    respuesta = (
-        f"Vuelos simulados encontrados:\n"
-        f"Origen: León\n"
-        f"Destino: CDMX\n"
-        f"Fecha: 2024-12-12\n"
-        f"Precio: $2400 MXN"
-    )
-    bot.reply_to(message, respuesta)
-
-@bot.message_handler(commands=['ChingatuMadre'])
-def buscar_vuelo6(message):
-    respuesta = ("Chinga tu madre tú, todo por eso esta pendejada de Base de datos ni va aquedar, pinche puto. Orale a chingar a su madre a otro lado.")
-    bot.reply_to(message, respuesta)
+    except IndexError:
+        bot.reply_to(message, "Por favor, indica el destino después del comando /buscar. Ejemplo: /buscar Cancún")
 
 # Echo para otros mensajes
 @bot.message_handler(func=lambda msg: True)
